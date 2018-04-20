@@ -14,6 +14,7 @@ import (
 	"math/big"
 	"reflect"
 	"strconv"
+	"github.com/imroc/biu"
 )
 
 // Opcodes
@@ -393,8 +394,17 @@ func (d *Decoder) loadBinInt() error {
 	if err != nil {
 		return err
 	}
-	v := binary.LittleEndian.Uint32(b[:])
-	d.push(int64(v))
+	var bs [4]byte
+	var j = 3
+	for i, bb := range b {
+		bs[j - i] = bb
+	}
+
+	var a int32
+	s := biu.BytesToBinaryString(bs[:])
+	biu.ReadBinaryString(s, &a)
+
+	d.push(int64(a))
 	return nil
 }
 
